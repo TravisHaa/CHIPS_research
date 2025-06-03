@@ -32,7 +32,7 @@ This notebook implements a comprehensive computer vision pipeline for semiconduc
 - **Visualization:** Creates annotated images showing detected features, measurements, and alignment information.
 
 This script achieves over 90% improvement in die center shift detection accuracy compared to previous methods.
-
+---
 2. **TrueAdapt_v3_AStar_Router_NoOverlap_v0.1.ipynb** (156KB)
 
 This notebook implements an advanced A\* pathfinding algorithm for circuit routing in semiconductor design. The main components are:
@@ -55,7 +55,7 @@ This notebook implements an advanced A\* pathfinding algorithm for circuit routi
   - Minimizes path length and via count
   - Avoids path overlaps
   - Optimizes for manufacturing constraints
-
+---
 3. **edge_det.ipynb** (40KB)
 
 This notebook focuses on edge detection and feature extraction for semiconductor images. The main features are:
@@ -80,7 +80,7 @@ This notebook focuses on edge detection and feature extraction for semiconductor
   - Draws detected features on images
   - Annotates measurements and angles
   - Generates debug visualizations
-
+---
 4. **process_microled.ipynb** (7.8MB)
 
 This notebook automates the detection, pairing, and routing of microLED contacts from wafer images. The main steps are:
@@ -95,7 +95,7 @@ This notebook automates the detection, pairing, and routing of microLED contacts
 - **Data Export:** Saves the paired contact data to both JSON and CSV formats for further analysis or record-keeping.
 
 This process enables automated, robust extraction and layout of microLED contact information from wafer images, supporting both visualization and downstream fabrication steps.
-
+---
 5. **TrueAdapt_v3_AStar_Router_NoOverlap_v0.1 copy.ipynb** (34KB)
 
 This is a backup version of the A\* router implementation with some key differences:
