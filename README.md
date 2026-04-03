@@ -4,16 +4,29 @@ This repository contains research and scripts related to TrueAdapt™ technology
 
 The edge detection script was the first script I developed, which used canny edge detection to isolate and obtain accurate measures of corner alignment marker edges to draw contours of the alignment markers. The centroids of each corner alignment marker contour are then used to calculate the center of each die in a given image. After developing and testing the second script, I realized that a more accurate version of template matching produced better results than using edge detection.
 
-CHIPS-CV_v8-4 was the script that I developed to increase die center shift detection by over 90%. Basically, this method accounts for rotation in template matching the corner alignment markers of each die, which is then used to calculate the center of the die.
+### CHIPS-CV_v8-4  was the script that I developed to increase die center shift detection by over 90%. Basically, this method accounts for rotation in template matching the corner alignment markers of each die, which is then used to calculate the center of the die.
 
-AStar_router is a A* router that is meant to route wires between the die components that were captured from the script CHIPS-CV_v8-4.ipynb. 
+## Before:
+<img width="673" height="642" alt="image" src="https://github.com/user-attachments/assets/06eb4f11-539c-4a57-b9d6-1eb30cc3b755" />
 
-process_microled.ipynb is the current script I'm working on, aimed at accurately routing wires through our microLED chip for each microLED (two contacts make up a singular microLED), accounting for two types of defects:
+## After:
+<img width="673" height="642" alt="image" src="https://github.com/user-attachments/assets/b01366d4-2756-4e80-8713-c42d015c3bb5" />
+
+
+### AStar_router is a 3D A* router that is meant to route wires between the die components that were captured from the script CHIPS-CV_v8-4.ipynb. The die components consist of 3 layers of wiring that my router has to account for.
+
+**Here are some Routing visualizations**:
+- The purple is the spacing that is supposed to be maintianed between wires on the same layer. The blue and green colors indicate different layers.
+<img width="400" height="400" alt="IMG_1272" src="https://github.com/user-attachments/assets/b3d9e812-48cf-45a0-9f17-3cc89b99ac9e" />
+<img width="400" height="400" alt="IMG_4268" src="https://github.com/user-attachments/assets/948a6dce-5ba3-4d8b-9c2a-b403d0d6fb89" />
+
+
+### process_microled.ipynb is aimed at accurately routing wires through our microLED chip for each microLED (two contacts make up a singular microLED), accounting for two types of defects:
 
 1. The contact is missing, and a artificial contact must be added based off its neighbor contacts.
 2. The contact exists, however it gets obstructed during imaging process.
 
-### Here are some visualizations of this:
+**Here are some visualizations of this:**
 - **This is what the microLED contacts look like on a micron level scale:**
 - <img width="400" height="400" alt="image" src="https://github.com/user-attachments/assets/ef9651c3-5855-40d5-b1a1-91fb22bc9dc3" />
 - **This is what the entire microLED chip looks like (zoomed out):**
@@ -45,12 +58,6 @@ This notebook implements a comprehensive computer vision pipeline for semiconduc
 - **Visualization:** Creates annotated images showing detected features, measurements, and alignment information.
 
 This script achieves over 90% improvement in die center shift detection accuracy compared to previous methods.
-
-## Before:
-<img width="673" height="642" alt="image" src="https://github.com/user-attachments/assets/06eb4f11-539c-4a57-b9d6-1eb30cc3b755" />
-
-## After:
-<img width="673" height="642" alt="image" src="https://github.com/user-attachments/assets/b01366d4-2756-4e80-8713-c42d015c3bb5" />
 
 ---
 2. **TrueAdapt_v3_AStar_Router_NoOverlap_v0.1.ipynb** (156KB)
