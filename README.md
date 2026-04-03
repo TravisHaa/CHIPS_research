@@ -15,8 +15,10 @@ The edge detection script was the first script I developed, which used canny edg
 
 ### AStar_router is a 3D A* router that is meant to route wires between the die components that were captured from the script CHIPS-CV_v8-4.ipynb. The die components consist of 3 layers of wiring that my router has to account for.
 
-**Here are some Routing visualizations**:
-- The purple is the spacing that is supposed to be maintianed between wires on the same layer. The blue and green colors indicate different layers.
+**Here are some Routing visualizations:**
+
+The purple is the spacing that is supposed to be maintained between wires on the same layer. The blue and green colors indicate different layers.
+
 <img width="400" height="400" alt="IMG_1272" src="https://github.com/user-attachments/assets/b3d9e812-48cf-45a0-9f17-3cc89b99ac9e" />
 <img width="400" height="400" alt="IMG_4268" src="https://github.com/user-attachments/assets/948a6dce-5ba3-4d8b-9c2a-b403d0d6fb89" />
 
@@ -27,17 +29,28 @@ The edge detection script was the first script I developed, which used canny edg
 2. The contact exists, however it gets obstructed during imaging process.
 
 **Here are some visualizations of this:**
-- **This is what the microLED contacts look like on a micron level scale:**
-- <img width="400" height="400" alt="image" src="https://github.com/user-attachments/assets/ef9651c3-5855-40d5-b1a1-91fb22bc9dc3" />
-- **This is what the entire microLED chip looks like (zoomed out):**
-- <img width="400" height="400" alt="image" src="https://github.com/user-attachments/assets/1d43473e-cb94-49e1-b040-d553d634c7fd" />
-- ***As you can see, there are billions of contacts that must be processed, so every operation per line of code contributes heavily to the runtime of this script.***
-- This is what the microLED contacts look like after edge detection:
-- <img width="400" height="400" alt="image" src="https://github.com/user-attachments/assets/c5433e00-e0ce-40e2-ac85-21fb412b1458" />
-- This is what it looks like after my script is ran on the image using GDSPY, accounting for contact errors:
-- <img width="400" height="400" alt="IMG_0004" src="https://github.com/user-attachments/assets/f2de0a27-1a2a-468f-b439-8c337bbc8644" />
-- And this is what it looks like running my script on a portion of the entire MicroLED chip:
-- <img width="400" height="400" alt="image" src="https://github.com/user-attachments/assets/fa4a56ed-24a2-40d9-a21b-77882846e96c" />
+
+**MicroLED contacts at micron scale:**
+
+<img width="400" height="400" alt="image" src="https://github.com/user-attachments/assets/ef9651c3-5855-40d5-b1a1-91fb22bc9dc3" />
+
+**Entire microLED chip (zoomed out):**
+
+<img width="400" height="400" alt="image" src="https://github.com/user-attachments/assets/1d43473e-cb94-49e1-b040-d553d634c7fd" />
+
+***As you can see, there are billions of contacts that must be processed, so every operation per line of code contributes heavily to the runtime of this script.***
+
+**MicroLED contacts after edge detection:**
+
+<img width="400" height="400" alt="image" src="https://github.com/user-attachments/assets/c5433e00-e0ce-40e2-ac85-21fb412b1458" />
+
+**After running the script with GDSPY, accounting for contact errors:**
+
+<img width="400" height="400" alt="IMG_0004" src="https://github.com/user-attachments/assets/f2de0a27-1a2a-468f-b439-8c337bbc8644" />
+
+**Script output on a portion of the entire MicroLED chip:**
+
+<img width="400" height="400" alt="image" src="https://github.com/user-attachments/assets/fa4a56ed-24a2-40d9-a21b-77882846e96c" />
 
 ---
 
@@ -58,6 +71,34 @@ This notebook implements a comprehensive computer vision pipeline for semiconduc
 - **Visualization:** Creates annotated images showing detected features, measurements, and alignment information.
 
 This script achieves over 90% improvement in die center shift detection accuracy compared to previous methods.
+
+**Some various improvements Made over v8 (old script):**
+
+- **Large-image reliability:** Sets `OPENCV_IO_MAX_IMAGE_PIXELS` before importing cv2 to avoid pixel-limit issues on very large scans. Adds runtime tracking with `datetime` (Start Time, End Time, Run Time) so long runs are measurable.
+
+- **Better rotation estimation:** v8 used a single-edge angle (`get_angle_simple`). v8-4 adds `get_angle_simple_vert(...)` and `get_angle_averaged(...)`, which averages 4 edge-based angle estimates. This reduces sensitivity to one noisy marker pair and gives a more stable wafer rotation estimate.
+
+- **Iterative rotation correction:** v8 applies one rotation pass if enabled. v8-4 iterates correction until `abs(theta) <= target_rotation` or a maximum number of iterations (`number_of_rotation_correction`) is reached — a meaningful improvement for scans with nontrivial residual skew after the first correction.
+
+- **More explicit pipeline controls:** Introduces configurable `number_of_rotation_correction`, `target_rotation`, and a separate misalignments image path, making the notebook more controllable across different scan quality/use cases.
+
+- **Adaptive template-threshold tuning for corner markers:** v8 uses fixed thresholds (cross: 0.63, squares: 0.58). v8-4 starts from tighter thresholds and adjusts dynamically to target expected marker counts (50 cross + 50 square) — a practical improvement when image contrast varies between runs.
+
+- **Additional geometry/alignment stage:** New `calculate_offset(...)` estimates assembly offset using alignment marker vs die geometry. Though currently overridden with hardcoded values in analysis, the function provides a route toward data-driven offset calibration.
+
+- **Expanded second-stage localization (`method_2`):** v8 has mostly placeholder behavior in `method_2`. v8-4 makes it operational: rotates templates by per-die theta, crops per-die ROI, rematches corner templates in each die, computes marker centers and die centers, and writes `method2_shifts_final.csv`. This is a major step toward per-die refined measurement.
+
+- **New overlay/model fitting layer:** Adds `model(...)` and `residuals(...)` with `scipy.optimize.leastsq`, and `overlay(...)` to compare measured vs ideal corner geometry. This introduces a more analytical fit (translation/rotation/magnification style terms) beyond simple direct offsets.
+
+- **More intermediate artifacts for debugging:** Writes extra files such as `threshold.png`, `identifymisalign.jpg`, and `overlay.jpg`, improving observability and troubleshooting at each stage.
+
+- **Parameterization recalibration:** Key parameters updated to reflect an updated physical layout model:
+  - `die_width`/`die_height`: 1900 → 2000 µm
+  - `pitch`: 2575 → 2800 µm
+  - `alignment_mark_dist`: 23000 → 25000 µm
+  - Contour thresholding now uses a higher base threshold with an OTSU path, with fixed contour-area defaults earlier in flow.
+
+**Summary:** v8-4 most improves rotation robustness, adaptive marker detection, second-pass per-die refinement, and debug visibility — making it closer to a production analysis pipeline.
 
 ---
 2. **TrueAdapt_v3_AStar_Router_NoOverlap_v0.1.ipynb** (156KB)
