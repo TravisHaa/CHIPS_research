@@ -13,6 +13,19 @@ process_microled.ipynb is the current script I'm working on, aimed at accurately
 1. The contact is missing, and a artificial contact must be added based off its neighbor contacts.
 2. The contact exists, however it gets obstructed during imaging process.
 
+### Here are some visualizations of this:
+- **This is what the microLED contacts look like on a micron level scale:**
+- <img width="400" height="400" alt="image" src="https://github.com/user-attachments/assets/ef9651c3-5855-40d5-b1a1-91fb22bc9dc3" />
+- **This is what the entire microLED chip looks like (zoomed out):**
+- <img width="400" height="400" alt="image" src="https://github.com/user-attachments/assets/1d43473e-cb94-49e1-b040-d553d634c7fd" />
+- ***As you can see, there are billions of contacts that must be processed, so every operation per line of code contributes heavily to the runtime of this script.***
+- This is what the microLED contacts look like after edge detection:
+- <img width="400" height="400" alt="image" src="https://github.com/user-attachments/assets/c5433e00-e0ce-40e2-ac85-21fb412b1458" />
+- This is what it looks like after my script is ran on the image using GDSPY, accounting for contact errors:
+- <img width="400" height="400" alt="IMG_0004" src="https://github.com/user-attachments/assets/f2de0a27-1a2a-468f-b439-8c337bbc8644" />
+- And this is what it looks like running my script on a portion of the entire MicroLED chip:
+- <img width="400" height="400" alt="image" src="https://github.com/user-attachments/assets/fa4a56ed-24a2-40d9-a21b-77882846e96c" />
+
 ---
 
 **Notebook Summaries**
@@ -32,10 +45,17 @@ This notebook implements a comprehensive computer vision pipeline for semiconduc
 - **Visualization:** Creates annotated images showing detected features, measurements, and alignment information.
 
 This script achieves over 90% improvement in die center shift detection accuracy compared to previous methods.
+
+## Before:
+<img width="673" height="642" alt="image" src="https://github.com/user-attachments/assets/06eb4f11-539c-4a57-b9d6-1eb30cc3b755" />
+
+## After:
+<img width="673" height="642" alt="image" src="https://github.com/user-attachments/assets/b01366d4-2756-4e80-8713-c42d015c3bb5" />
+
 ---
 2. **TrueAdapt_v3_AStar_Router_NoOverlap_v0.1.ipynb** (156KB)
 
-This notebook implements an advanced A\* pathfinding algorithm for circuit routing in semiconductor design. The main components are:
+This notebook is my implementation of an advanced A\* pathfinding algorithm for circuit routing in semiconductor design. The main components are:
 
 - **GDSII Integration:** Handles GDSII file format for semiconductor layouts using gdspy library.
 - **Multi-layer Support:** Implements routing across multiple metal layers (Metal1, Metal2) with via connections.
